@@ -91,6 +91,7 @@ class Get_list_foto_album(Get_autorization_user):
 
 
 
+
   def _get_list_album(self):
     # Basis.__init__(self)
     lsit_id_albums = []
@@ -127,18 +128,25 @@ class Get_list_foto_album(Get_autorization_user):
         print('22', lsit_id_albums)
         return lsit_id_albums
 
-  # def _images_of_alboum(self, user_id):
-  #   self.user_id = Get_list_foto_album.__init__(self, user_id)
-  #   self.title_method = 'photos.get'
-  #   lsit_id_albums = Get_list_foto_album._get_list_album(self)
-  #   # Get_list_foto_album.__init__(user_id)
-  #
-  #   params = {'owner_id' : self.user_id, 'album_id' : lsit_id_albums,\
-  #             'count' : edict_informasion['response']['items'][i]['size'] }
-  #   # params = {}
-  #   url = self.protocol + self.domen + self.path_ + self.title_method
-  #   photo_ = requests.get(url, params = params)
-  #   print(photo_)
+  def _images_of_alboum(self, lsit_id_albums):
+    # self.user_id = Get_list_foto_album.__init__(self, user_id)
+
+    self.title_method = 'photos.get'
+    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
+    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
+    # Get_list_foto_album.__init__(user_id)
+    # print('555', self.access_token)
+    # params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : lsit_id_albums } #'count' :
+    params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : 'saved', 'rev' : 0,\
+              'album_id' : str(258336424), 'extended' : 0, 'photo_sizes'  : 0, 'v' : self.version_api }
+    #'count' :
+    # edict_informasion['response']['items'][i]['size']
+    # params = {}
+    url = self.protocol + self.domen + self.path_ + self.title_method
+    photo_ = requests.get(url, params = params)
+    # print('44', photo_.status_code)
+    photo_ = photo_.json()
+    return photo_
 
   def index_album_selected(self):
 
@@ -147,10 +155,27 @@ class Get_list_foto_album(Get_autorization_user):
     selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
       .split(', ')
 
+    # print('selected_album', selected_album)
     index_i = []
     for i in selected_album:
-      index_i.append(lsit_id_albums.index(int(str(i).strip("][").strip("'").strip(" "))))
+      # print('33', int(str(i).strip("][").strip('"').strip("'").strip('"').strip(" ")))
+      # index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" "))).strip(',')
+      index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')))
 
-    print('index_i: ', index_i)
-    # _images_of_alboum(self, user_id)
-
+    # print('index_i: ', index_i)
+    # Get_autorization_user.__init__(self, user_id)
+    # self.user_id = user_id
+    photo_ = Get_list_foto_album._images_of_alboum(self, lsit_id_albums)
+    # print('55')
+    size_defoult = photo_['response']['items']
+    # print(f"size_defoult {size_defoult[len(size_defoult)-1]}")
+    print(f"Фотоальбом id: {size_defoult[len(size_defoult)-1]['album_id']}")
+    print(f"Общее число фотографий: {photo_['response']['count']}")
+    print(f"Фотография id: {size_defoult[len(size_defoult)-1]['id']}")
+    # size_defoult = photo_['response']['items'].reverse()
+    size_id = len(size_defoult[len(size_defoult)-1]['sizes']) -1
+    # print(f"size_defoult {size_defoult[len(size_defoult)-1]['sizes'][size_id]}")
+    print(f"Фотография высота: {size_defoult[len(size_defoult)-1]['sizes'][size_id]['height']} x ширина: "
+          f" {size_defoult[len(size_defoult)-1]['sizes'][size_id]['width']}")
+    print(f"Фотография URL: {size_defoult[len(size_defoult)-1]['sizes'][size_id]['url']}")
+    print(' ')
