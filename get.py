@@ -1,8 +1,10 @@
 from basis import Basis
-import os.path
+import os
 import re
 from pprint import pprint
 import requests
+
+
 
 class Get_Token(Basis):
 
@@ -102,18 +104,18 @@ class Get_list_foto_album(Get_autorization_user):
 
     self.params = {'user_ids': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
                    'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
-    r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
+    r_ = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
     informasion = requests.get(url, params = self.params)
 
 
-    if r.search(str(self.user_id)):
+    if r_.search(str(self.user_id)):
       if informasion.status_code >= 300:
         print(f"Что-то, с альбомами пошло не так. Ответ: {informasion.status_code}")
 
 
       elif informasion.status_code < 300:
         edict_informasion = informasion.json()
-        # print(informasion.status_code)
+        print(F"edict_informasion: {edict_informasion}")
         print(f"Колличество найденных альбомов:{edict_informasion['response']['count']}")
         for i in range(len(edict_informasion['response']['items'])):
 
@@ -196,22 +198,55 @@ class Get_list_foto_album(Get_autorization_user):
 
     return list_photo_dict
 
-  def _Ya_disk_upload(self, res):
+  def _Ya_disk_get_link(self):
+    files = os.listdir('files/')
+    # print(files)
+    # request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+    # path = "/files/"
+    # params = {'url': url, 'path': path, 'disable_redirects': 'true'}
+
+    # upluad = requests.post(ref, headers=header, params=params)
+    # print(f"upluad: {upluad}")
+    template = r"\S+\.[jpg][png][gif]"
+    r = re.compile(template)
+
+    for f in files:
+      # print(f"f: {f}")
+      res = []
+      if r.search(f):
+        request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+        Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
+        header = {'Content-Type': 'application/json', 'Authorization': Authorization}
+        path = "files/"
+        params = {'path': path, 'disable_redirects': 'true'}
+        respons = requests.get(request_, headers=header, params = params)
+
+        if res == []:
+          res = [respons.json()]
+        else:
+          res.append(respons.json())
+    return res
 
 
-    # path = https://disk.yandex.ru/client/disk
-    path = 'https://disk.yandex.ru/client/disk'
-    Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
-    header = {'Content-Type': 'application/json', 'Authorization': Authorization}
-    ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+  # def _Ya_disk_upload(self, res):
+  #
+  #
+  #   # path = https://disk.yandex.ru/client/disk
+  #   path = '/client/disk'
+  #   # path = '/client/disk'
+  #   # path = '/d/vjPttsa70T7E7w'
+  #
+  #   ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
 
 
 
 
-    url = res['response']['upload_url']
-    params = {'url': url, 'path': path, 'disable_redirects': 'true'}
-    upluad = requests.post(ref, headers=header, params=params)
-    print(f"upluad: {upluad}")
+    # # url = res['response']['upload_url']
+    # url = 'https://sun9-71.userapi.com/s/v1/if1/YY7P-Dkb-29BgrFXhLy1Itfi2zBuSJ_2a-3ge95c4evvJSYTyakOriJ_vJmyCsPuwNTz8kUf.jpg?size=697x640&quality=96&type=album'
+    # # url = 'https%3A%2F%2Fsun9-71.userapi.com%2Fs%2Fv1%2Fif1%2FYY7P-Dkb-29BgrFXhLy1Itfi2zBuSJ_2a-3ge95c4evvJSYTyakOriJ_vJmyCsPuwNTz8kUf.jpg%3Fsize%3D697x640%26quality%3D96%26type%3Dalbum'
+    #
+    # upluad = requests.post(ref, headers=header, params=params)
+    # print(f"upluad: {upluad.json()}")
 
   def get_photo_selected(self):
     get_photo_list = Get_list_foto_album._index_album_selected(self)
@@ -223,17 +258,16 @@ class Get_list_foto_album(Get_autorization_user):
     id_before = 0
 
     for list_photo in get_photo_list['max_photo_size']:
-      print(f"Dict': {list_photo}")
-      id_before += 1
-      print(id_before)
-      print(f"list_photo['alboum_id']: {list_photo['id_allboum']}")
+      picturies = str(list_photo['url']).split("/")[-1].split("?")[0]
+      # print(f"picturies': {picturies}")
+      # print(f"Dict': {list_photo['url']}")
+      # id_before += 1
+      # print(id_before)
+      api = requests.get(list_photo['url'])
+      with open("files/%s" % picturies, "wb") as file:
+        file.write(api.content)
 
-      params = {'access_token': self.access_token, 'album_id': list_photo['id_allboum'], 'v': self.version_api}
-      respons = requests.get(url, params=params)
-      res = respons.json()
-      print('44', res)
-
-      Get_list_foto_album._Ya_disk_upload(self, res)
+      # Get_list_foto_album._Ya_disk_get_link(self)
 
 
 

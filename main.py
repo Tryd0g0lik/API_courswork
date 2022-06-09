@@ -39,6 +39,8 @@ if __name__ == '__main__':
   from get import Get_Token, Get_autorization_user, Get_list_foto_album
   import re
 
+  # token_ = 'vk1.a.TgR9u-XAbHLI84sT1oyEG_v0nsux2LRU0duiZdGpg9i89bstFtmIRVZoxm4vKE7OhlN-_sDJgrKFRNuohogSPKms6sT1IpvsyYFimHbnRo1PompF4HSsp4ZTlV6ctdqo6O8tVtPg6qDcxMfO41k9_OZCBUxMV8cTl4dpXyLQRxieLM_eV7qaI94DqhLBEMEJ'
+  # token_ = '7de41821c52ae0f2bd95f4d6e25c004a17ca92a01979ccf4d72d0ba209d13e1dc77a36da2adaf12e56ab5'
   token_ = 'vk1.a.TgR9u-XAbHLI84sT1oyEG_v0nsux2LRU0duiZdGpg9i89bstFtmIRVZoxm4vKE7OhlN-_sDJgrKFRNuohogSPKms6sT1IpvsyYFimHbnRo1PompF4HSsp4ZTlV6ctdqo6O8tVtPg6qDcxMfO41k9_OZCBUxMV8cTl4dpXyLQRxieLM_eV7qaI94DqhLBEMEJ'
   api_ = str(5.131)
   r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
