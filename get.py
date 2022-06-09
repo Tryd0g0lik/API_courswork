@@ -158,8 +158,8 @@ class Get_list_foto_album(Get_autorization_user):
 
     lsit_id_albums = Get_list_foto_album._get_list_album(self)
     print('Перечислите "ID-альбомов" которые желаете посмотреть для созранения фотографий ')
-    selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
-      .split(', ')
+    selected_album = ['240968642'] #(input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
+      #.split(', ')
 
     index_i = []
     list_photo_dict = {}
@@ -174,32 +174,66 @@ class Get_list_foto_album(Get_autorization_user):
 
     for one_dict in photo_['photo_']:
 
-      # print(one_dict)
-
-      # print('33', len(one_dict['response']['items']))
       for size_defoult in one_dict['response']['items']:
-        # print(f"size_defoult: {size_defoult}")
+
+        print(f"Id альбома: {size_defoult['album_id']}")
         print(f"Фотография id: {size_defoult['id']}")
-        # print(f"size_id: {type(size_defoult['sizes'])}")
-        # for dict_photo in size_defoult['sizes']:
+
         size_id = len(size_defoult['sizes'])-1
-        # print(f"size_id: {size_id}, dict_photo: {size_defoult['sizes'][ size_id]}")
+
         print(f"Фотография высота: {size_defoult['sizes'][ size_id]['height']} x ширина: "
               f" {size_defoult['sizes'][ size_id]['width']}")
         print(f"Фотография URL: {size_defoult['sizes'][ size_id]['url']}")
         print(' ')
 
         if list_photo_dict == {}:
-          list_photo_dict['max_photo_size'] = [{'id' : size_defoult['id'], 'url' : size_defoult['sizes'][ size_id]\
-            ['url']}]
+          list_photo_dict['max_photo_size'] = [{'id_allboum' : size_defoult['album_id'], 'url' :\
+            size_defoult['sizes'][size_id]['url']}]
 
         else:
-          list_photo_dict['max_photo_size'].append({'id' : size_defoult['id'], 'url' : size_defoult['sizes'][ size_id]\
-            ['url']})
-      # photo_id_link.append(size_defoult[len(size_defoult)-1]['sizes'][size_id]['url'])
-      # photo_url_link.append(size_defoult[len(size_defoult)-1]['sizes'][size_id]['url'])
-      # print(photo_url_lin|k)
+          list_photo_dict['max_photo_size'].append({'id_allboum' : size_defoult['album_id'], 'url' :\
+            size_defoult['sizes'][ size_id]['url']})
+
     return list_photo_dict
 
-  def get_photo_link(self):
-    print(Get_list_foto_album._index_album_selected(self))
+  # def Ya_disk_upload:
+
+  def get_photo_selected(self):
+    get_photo_list = Get_list_foto_album._index_album_selected(self)
+    self.title_method = 'photos.getUploadServer'
+    # path = https://disk.yandex.ru/client/disk
+    path = 'https://disk.yandex.ru/client/disk'
+    Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
+    header = {'Content-Type' : 'application/json', 'Authorization' : Authorization}
+    ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+
+    print("Сохраняем фотографии")
+    id_before = 0
+    url = self.protocol + self.domen + self.path_ + self.title_method
+    for list_photo in get_photo_list['max_photo_size']:
+      print(f"Dict': {list_photo}")
+      id_before += 1
+      print(id_before)
+      print(f"list_photo['alboum_id']: {list_photo['id_allboum']}")
+
+      # for id_alboum in list_photo['id_allboum']:
+      params = {'access_token': self.access_token, 'album_id': list_photo['id_allboum'], 'v': self.version_api}
+      respons = requests.get(url, params=params)
+      res = respons.json()
+      print('44',res )
+
+      url = res['response']['upload_url']
+      params = {'url' : url, 'path' : path, 'disable_redirects' : 'true' }
+      upluad = requests.post(ref, headers=header, params=params)
+      print(f"upluad: {upluad}")
+      # print(f"ref: {(respons.json())['response']['upload_url']}")
+    # ['upload_url']
+    # print(f"get_photo_list: {get_photo_list}")
+
+    # # print(params)
+    #
+    # if photo_ == {}:
+    #   response = requests.get(url, params=params)
+
+
+
