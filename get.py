@@ -196,44 +196,44 @@ class Get_list_foto_album(Get_autorization_user):
 
     return list_photo_dict
 
-  # def Ya_disk_upload:
+  def _Ya_disk_upload(self, res):
+
+
+    # path = https://disk.yandex.ru/client/disk
+    path = 'https://disk.yandex.ru/client/disk'
+    Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
+    header = {'Content-Type': 'application/json', 'Authorization': Authorization}
+    ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+
+
+
+
+    url = res['response']['upload_url']
+    params = {'url': url, 'path': path, 'disable_redirects': 'true'}
+    upluad = requests.post(ref, headers=header, params=params)
+    print(f"upluad: {upluad}")
 
   def get_photo_selected(self):
     get_photo_list = Get_list_foto_album._index_album_selected(self)
     self.title_method = 'photos.getUploadServer'
-    # path = https://disk.yandex.ru/client/disk
-    path = 'https://disk.yandex.ru/client/disk'
-    Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
-    header = {'Content-Type' : 'application/json', 'Authorization' : Authorization}
-    ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+    url = self.protocol + self.domen + self.path_ + self.title_method
+
 
     print("Сохраняем фотографии")
     id_before = 0
-    url = self.protocol + self.domen + self.path_ + self.title_method
+
     for list_photo in get_photo_list['max_photo_size']:
       print(f"Dict': {list_photo}")
       id_before += 1
       print(id_before)
       print(f"list_photo['alboum_id']: {list_photo['id_allboum']}")
 
-      # for id_alboum in list_photo['id_allboum']:
       params = {'access_token': self.access_token, 'album_id': list_photo['id_allboum'], 'v': self.version_api}
       respons = requests.get(url, params=params)
       res = respons.json()
-      print('44',res )
+      print('44', res)
 
-      url = res['response']['upload_url']
-      params = {'url' : url, 'path' : path, 'disable_redirects' : 'true' }
-      upluad = requests.post(ref, headers=header, params=params)
-      print(f"upluad: {upluad}")
-      # print(f"ref: {(respons.json())['response']['upload_url']}")
-    # ['upload_url']
-    # print(f"get_photo_list: {get_photo_list}")
-
-    # # print(params)
-    #
-    # if photo_ == {}:
-    #   response = requests.get(url, params=params)
+      Get_list_foto_album._Ya_disk_upload(self, res)
 
 
 
