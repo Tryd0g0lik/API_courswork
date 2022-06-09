@@ -59,6 +59,6 @@ if __name__ == '__main__':
 
 
 
-  list_foto_album.index_album_selected()
+  list_foto_album.get_photo_link()
 
   # list_foto_album.foto_album_selected(list_album)

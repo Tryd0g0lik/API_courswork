@@ -128,54 +128,78 @@ class Get_list_foto_album(Get_autorization_user):
         print('22', lsit_id_albums)
         return lsit_id_albums
 
-  def _images_of_alboum(self, lsit_id_albums):
-    # self.user_id = Get_list_foto_album.__init__(self, user_id)
+  def _images_of_alboum(self, selected_album):
 
     self.title_method = 'photos.get'
-    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
-    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
-    # Get_list_foto_album.__init__(user_id)
-    # print('555', self.access_token)
-    # params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : lsit_id_albums } #'count' :
-    params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : 'saved', 'rev' : 0,\
-              'album_id' : str(258336424), 'extended' : 0, 'photo_sizes'  : 0, 'v' : self.version_api }
-    #'count' :
-    # edict_informasion['response']['items'][i]['size']
-    # params = {}
-    url = self.protocol + self.domen + self.path_ + self.title_method
-    photo_ = requests.get(url, params = params)
-    # print('44', photo_.status_code)
-    photo_ = photo_.json()
+    photo_ = {}
+    for id_albums in selected_album:
+      id_albums = id_albums.strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')
+      # print('11', id_albums)
+      params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : 'saved', 'rev' : 0,\
+                'album_id' : str(id_albums), 'extended' : 0, 'photo_sizes'  : 0, 'v' : self.version_api }
+      # print(params)
+      url = self.protocol + self.domen + self.path_ + self.title_method
+
+      if photo_ == {}:
+        response = requests.get(url, params = params)
+        # print(f"response: {response.json()}")
+        photo_['photo_'] = [response.json()]
+      else:
+        response = requests.get(url, params = params)
+        # print(f"response: {response.json()}")
+        photo_['photo_'].append(response.json())
+
+
+
+    # print(f"photo_: {photo_}")
     return photo_
 
-  def index_album_selected(self):
+  def _index_album_selected(self):
 
     lsit_id_albums = Get_list_foto_album._get_list_album(self)
     print('Перечислите "ID-альбомов" которые желаете посмотреть для созранения фотографий ')
     selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
       .split(', ')
 
-    # print('selected_album', selected_album)
     index_i = []
+    list_photo_dict = {}
+    # photo_url_link = []
+    # photo_id_link = []
     for i in selected_album:
-      # print('33', int(str(i).strip("][").strip('"').strip("'").strip('"').strip(" ")))
-      # index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" "))).strip(',')
+
       index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')))
 
-    # print('index_i: ', index_i)
-    # Get_autorization_user.__init__(self, user_id)
-    # self.user_id = user_id
-    photo_ = Get_list_foto_album._images_of_alboum(self, lsit_id_albums)
-    # print('55')
-    size_defoult = photo_['response']['items']
-    # print(f"size_defoult {size_defoult[len(size_defoult)-1]}")
-    print(f"Фотоальбом id: {size_defoult[len(size_defoult)-1]['album_id']}")
-    print(f"Общее число фотографий: {photo_['response']['count']}")
-    print(f"Фотография id: {size_defoult[len(size_defoult)-1]['id']}")
-    # size_defoult = photo_['response']['items'].reverse()
-    size_id = len(size_defoult[len(size_defoult)-1]['sizes']) -1
-    # print(f"size_defoult {size_defoult[len(size_defoult)-1]['sizes'][size_id]}")
-    print(f"Фотография высота: {size_defoult[len(size_defoult)-1]['sizes'][size_id]['height']} x ширина: "
-          f" {size_defoult[len(size_defoult)-1]['sizes'][size_id]['width']}")
-    print(f"Фотография URL: {size_defoult[len(size_defoult)-1]['sizes'][size_id]['url']}")
-    print(' ')
+
+    photo_ = Get_list_foto_album._images_of_alboum(self, selected_album)
+
+    for one_dict in photo_['photo_']:
+
+      # print(one_dict)
+
+      # print('33', len(one_dict['response']['items']))
+      for size_defoult in one_dict['response']['items']:
+        # print(f"size_defoult: {size_defoult}")
+        print(f"Фотография id: {size_defoult['id']}")
+        # print(f"size_id: {type(size_defoult['sizes'])}")
+        # for dict_photo in size_defoult['sizes']:
+        size_id = len(size_defoult['sizes'])-1
+        # print(f"size_id: {size_id}, dict_photo: {size_defoult['sizes'][ size_id]}")
+        print(f"Фотография высота: {size_defoult['sizes'][ size_id]['height']} x ширина: "
+              f" {size_defoult['sizes'][ size_id]['width']}")
+        print(f"Фотография URL: {size_defoult['sizes'][ size_id]['url']}")
+        print(' ')
+
+        if list_photo_dict == {}:
+          list_photo_dict['max_photo_size'] = [{'id' : size_defoult['id'], 'url' : size_defoult['sizes'][ size_id]\
+            ['url']}]
+
+        else:
+          list_photo_dict['max_photo_size'].append({'id' : size_defoult['id'], 'url' : size_defoult['sizes'][ size_id]\
+            ['url']})
+      # photo_id_link.append(size_defoult[len(size_defoult)-1]['sizes'][size_id]['url'])
+      # photo_url_link.append(size_defoult[len(size_defoult)-1]['sizes'][size_id]['url'])
+      # print(photo_url_lin|k)
+    return list_photo_dict
+
+  def get_photo_link(self):
+    print(Get_list_foto_album._index_album_selected(self))
