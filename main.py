@@ -39,9 +39,8 @@ if __name__ == '__main__':
   from get import Get_Token, Get_autorization_user, Get_list_foto_album
   import re
 
-  # token_ = 'vk1.a.TgR9u-XAbHLI84sT1oyEG_v0nsux2LRU0duiZdGpg9i89bstFtmIRVZoxm4vKE7OhlN-_sDJgrKFRNuohogSPKms6sT1IpvsyYFimHbnRo1PompF4HSsp4ZTlV6ctdqo6O8tVtPg6qDcxMfO41k9_OZCBUxMV8cTl4dpXyLQRxieLM_eV7qaI94DqhLBEMEJ'
-  # token_ = '7de41821c52ae0f2bd95f4d6e25c004a17ca92a01979ccf4d72d0ba209d13e1dc77a36da2adaf12e56ab5'
-  token_ = 'vk1.a.TgR9u-XAbHLI84sT1oyEG_v0nsux2LRU0duiZdGpg9i89bstFtmIRVZoxm4vKE7OhlN-_sDJgrKFRNuohogSPKms6sT1IpvsyYFimHbnRo1PompF4HSsp4ZTlV6ctdqo6O8tVtPg6qDcxMfO41k9_OZCBUxMV8cTl4dpXyLQRxieLM_eV7qaI94DqhLBEMEJ'
+
+  tokens_ = 'vk1.a.GAMpnSpGlrs1YJFfPp5dh6Z_o47g1VCE4yhjh1amdnN3qT7O6TCGWSjcloBhRnjFQhOcGM3LcH0TtIx1pXf77AtTdLkFtBq-GcPc63vE_P5rc54KQPLLPA48BQOXud9k5YIQiW9WJthom0Frieqe-i9i-jZur1b4XQo1PG-Qwz02ldjSaJGDdscW0e3b3Xta'
   api_ = str(5.131)
   r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
   print(f'Предоставьте ID пользователя!')
@@ -50,12 +49,12 @@ if __name__ == '__main__':
 
   autorization_user = Get_autorization_user(ID_user)
   autorization_user.version_api = api_
-  autorization_user.access_token = token_
+  autorization_user.access_token = tokens_
   autorization_user.get_authorization()
 
 
   list_foto_album = Get_list_foto_album(ID_user)
-  list_foto_album.access_token = token_
+  list_foto_album.access_token = tokens_
   list_foto_album.version_api = api_
   # list_foto_album.get_list_album()Get_list_foto_album.__init__(user_id)
 

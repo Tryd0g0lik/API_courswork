@@ -102,7 +102,9 @@ class Get_list_foto_album(Get_autorization_user):
 
     url = self.protocol + self.domen + self.path_ + self.title_method
 
-    self.params = {'user_ids': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
+    # self.params = {'user_ids': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
+    #                'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
+    self.params = {'owner_id': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
                    'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
     r_ = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
     informasion = requests.get(url, params = self.params)
@@ -198,9 +200,18 @@ class Get_list_foto_album(Get_autorization_user):
 
     return list_photo_dict
 
+  def _Ya_disk_upload(self, headers, ref, file):
+    # requests.put(ref, headers=headers, params=params)
+    params = {'disable_redirects': 'true'}
+    print(f"file: {file}, ref: {ref}, href: {ref[0]}")
+    href = ref[0]
+    # stat = requests.put(href, data=(open(file)))
+    # stat = requests.put(href,headers=headers, params=params)
+    # print(f"stat: {stat.status_code}")
+
   def _Ya_disk_get_link(self):
     files = os.listdir('files/')
-    # print(files)
+    print(files)
     # request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
     # path = "/files/"
     # params = {'url': url, 'path': path, 'disable_redirects': 'true'}
@@ -223,9 +234,15 @@ class Get_list_foto_album(Get_autorization_user):
 
         if res == []:
           res = [respons.json()]
+          ref = res
+          print(ref)
+          Get_list_foto_album._Ya_disk_upload(self, header, ref, f)
         else:
           res.append(respons.json())
-    return res
+          ref = res
+          print(f"selfe ref: {ref}")
+          Get_list_foto_album._Ya_disk_upload(self, header, ref, f)
+    return
 
 
   # def _Ya_disk_upload(self, res):
@@ -252,22 +269,26 @@ class Get_list_foto_album(Get_autorization_user):
     get_photo_list = Get_list_foto_album._index_album_selected(self)
     self.title_method = 'photos.getUploadServer'
     url = self.protocol + self.domen + self.path_ + self.title_method
-
+    print(f"url: {url}")
 
     print("Сохраняем фотографии")
     id_before = 0
 
     for list_photo in get_photo_list['max_photo_size']:
       picturies = str(list_photo['url']).split("/")[-1].split("?")[0]
-      # print(f"picturies': {picturies}")
-      # print(f"Dict': {list_photo['url']}")
-      # id_before += 1
-      # print(id_before)
+
+
+      link_ = "files/" + picturies
+      print((f" link_ : { link_ }"))
+      # with open("files/%s" % picturies, "wb") as file:
+
+      # with open(link_) as file:
+      #   file.write(api.content)
+
       api = requests.get(list_photo['url'])
-      with open("files/%s" % picturies, "wb") as file:
-        file.write(api.content)
+      # print(f"api: {api.json()}")
+      re_ = Get_list_foto_album._Ya_disk_get_link(self)
 
-      # Get_list_foto_album._Ya_disk_get_link(self)
-
+      print(re_)
 
 
