@@ -167,8 +167,7 @@ class Get_list_foto_album(Get_autorization_user):
 
     index_i = []
     list_photo_dict = {}
-    # photo_url_link = []
-    # photo_id_link = []
+
     for i in selected_album:
 
       index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')))
@@ -200,77 +199,54 @@ class Get_list_foto_album(Get_autorization_user):
 
     return list_photo_dict
 
-  def _Ya_disk_upload(self, headers, ref, file):
-    # requests.put(ref, headers=headers, params=params)
+  def _Ya_disk_upload(self, href, file):
+
     params = {'disable_redirects': 'true'}
-    print(f"file: {file}, ref: {ref}, href: {ref[0]}")
-    href = ref[0]
-    # stat = requests.put(href, data=(open(file)))
-    # stat = requests.put(href,headers=headers, params=params)
-    # print(f"stat: {stat.status_code}")
+
+    print(f"file: {file}")
+
+    print(f"href : {href }")
+
+    t = requests.put(href, data=open('files/' + file, 'rb'))
+
+    print(f"t__: {t}")
+    print(f"t.status_code: {t.status_code}")
+    print(f"t.json(): {t}")
 
   def _Ya_disk_get_link(self):
     files = os.listdir('files/')
-    print(files)
-    # request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
-    # path = "/files/"
-    # params = {'url': url, 'path': path, 'disable_redirects': 'true'}
+    request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
 
-    # upluad = requests.post(ref, headers=header, params=params)
-    # print(f"upluad: {upluad}")
+    Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
+    header = {'Content-Type': 'application/json', 'Authorization': Authorization}
+
     template = r"\S+\.[jpg][png][gif]"
     r = re.compile(template)
 
     for f in files:
-      # print(f"f: {f}")
-      res = []
+
+      res = None
       if r.search(f):
-        request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
-        Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
-        header = {'Content-Type': 'application/json', 'Authorization': Authorization}
-        path = "files/"
-        params = {'path': path, 'disable_redirects': 'true'}
+
+        path = "D%3A%2Fdjango-sites%2FNetologe%2Fcoursework-vk%2Ffiles%2F" + f
+        params = {'path': path, 'overwrite': 'true'}
+
         respons = requests.get(request_, headers=header, params = params)
 
-        if res == []:
-          res = [respons.json()]
-          ref = res
-          print(ref)
-          Get_list_foto_album._Ya_disk_upload(self, header, ref, f)
-        else:
-          res.append(respons.json())
-          ref = res
-          print(f"selfe ref: {ref}")
-          Get_list_foto_album._Ya_disk_upload(self, header, ref, f)
-    return
+        res = respons.json()
+        print(f"res__: {res}")
+        print(f"res['href']: {res['href']}")
+        href = res['href']
+        print(f"href__: {href}")
 
+        Get_list_foto_album._Ya_disk_upload(self, href, f)
 
-  # def _Ya_disk_upload(self, res):
-  #
-  #
-  #   # path = https://disk.yandex.ru/client/disk
-  #   path = '/client/disk'
-  #   # path = '/client/disk'
-  #   # path = '/d/vjPttsa70T7E7w'
-  #
-  #   ref = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
-
-
-
-
-    # # url = res['response']['upload_url']
-    # url = 'https://sun9-71.userapi.com/s/v1/if1/YY7P-Dkb-29BgrFXhLy1Itfi2zBuSJ_2a-3ge95c4evvJSYTyakOriJ_vJmyCsPuwNTz8kUf.jpg?size=697x640&quality=96&type=album'
-    # # url = 'https%3A%2F%2Fsun9-71.userapi.com%2Fs%2Fv1%2Fif1%2FYY7P-Dkb-29BgrFXhLy1Itfi2zBuSJ_2a-3ge95c4evvJSYTyakOriJ_vJmyCsPuwNTz8kUf.jpg%3Fsize%3D697x640%26quality%3D96%26type%3Dalbum'
-    #
-    # upluad = requests.post(ref, headers=header, params=params)
-    # print(f"upluad: {upluad.json()}")
 
   def get_photo_selected(self):
     get_photo_list = Get_list_foto_album._index_album_selected(self)
-    print(f"get_photo_list: {get_photo_list}")
+
     self.title_method = 'photos.getUploadServer'
     url = self.protocol + self.domen + self.path_ + self.title_method
-    print(f"url: {url}")
 
     print("Сохраняем фотографии")
     id_before = 0
@@ -282,7 +258,15 @@ class Get_list_foto_album(Get_autorization_user):
       link_ = "files/" + picturies
       print(f"max_photo_size[1]: {list_photo['url']}")
       p = requests.get(list_photo['url'])
+
       out = open(link_, "wb")
+
       out.write(p.content)
       out.close()
+
+
+
+      Get_list_foto_album._Ya_disk_get_link(self)
+
+
 
