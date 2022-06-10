@@ -267,6 +267,7 @@ class Get_list_foto_album(Get_autorization_user):
 
   def get_photo_selected(self):
     get_photo_list = Get_list_foto_album._index_album_selected(self)
+    print(f"get_photo_list: {get_photo_list}")
     self.title_method = 'photos.getUploadServer'
     url = self.protocol + self.domen + self.path_ + self.title_method
     print(f"url: {url}")
@@ -277,18 +278,11 @@ class Get_list_foto_album(Get_autorization_user):
     for list_photo in get_photo_list['max_photo_size']:
       picturies = str(list_photo['url']).split("/")[-1].split("?")[0]
 
-
+      # Download a photo from the web
       link_ = "files/" + picturies
-      print((f" link_ : { link_ }"))
-      # with open("files/%s" % picturies, "wb") as file:
-
-      # with open(link_) as file:
-      #   file.write(api.content)
-
-      api = requests.get(list_photo['url'])
-      # print(f"api: {api.json()}")
-      re_ = Get_list_foto_album._Ya_disk_get_link(self)
-
-      print(re_)
-
+      print(f"max_photo_size[1]: {list_photo['url']}")
+      p = requests.get(list_photo['url'])
+      out = open(link_, "wb")
+      out.write(p.content)
+      out.close()
 
