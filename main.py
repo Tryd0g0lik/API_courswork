@@ -39,12 +39,13 @@ if __name__ == '__main__':
   from get import Get_Token, Get_autorization_user, Get_list_foto_album
   import re
 
-
-  tokens_ = 'vk1.a.GAMpnSpGlrs1YJFfPp5dh6Z_o47g1VCE4yhjh1amdnN3qT7O6TCGWSjcloBhRnjFQhOcGM3LcH0TtIx1pXf77AtTdLkFtBq-GcPc63vE_P5rc54KQPLLPA48BQOXud9k5YIQiW9WJthom0Frieqe-i9i-jZur1b4XQo1PG-Qwz02ldjSaJGDdscW0e3b3Xta'
+  print('''Разместите токен в "tokens_". Фуекция проверки файла с токеном создана и не 
+        стал запускать.''')
+  tokens_ = 'ВАШ ТОКЕН'
   api_ = str(5.131)
   r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
   print(f'Предоставьте ID пользователя!')
-  ID_user = '163911024' #'Tryd0g0lik' #input('ID: ')
+  ID_user = input('ID: ')
   print( "Найден" if r.search(ID_user) else "No")
 
   autorization_user = Get_autorization_user(ID_user)
@@ -56,10 +57,10 @@ if __name__ == '__main__':
   list_foto_album = Get_list_foto_album(ID_user)
   list_foto_album.access_token = tokens_
   list_foto_album.version_api = api_
-  # list_foto_album.get_list_album()Get_list_foto_album.__init__(user_id)
+
 
 
 
   list_foto_album.get_photo_selected()
+  print('Сделано!')
 
-  # list_foto_album.foto_album_selected(list_album)

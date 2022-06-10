@@ -10,7 +10,6 @@ class Get_Token(Basis):
 
   def get_user_token(self):
 
-    # print('ghbdtn')
     check_token = os.path.isfile('files/token.txt')
     print('Наличие файла: ', check_token)
     if check_token == False:
@@ -54,9 +53,7 @@ class Get_autorization_user(Basis):
     super().__init__()
     self.params = {'user_ids': self.user_id, 'access_token': self.access_token, 'fields': 'has_photo, maiden_name, '\
       'screen_name, photo_400_orig', 'v': self.version_api}
-    # print(f"user_ids: {self.user_id}, access_token': {self.access_token}, fields: 'has_photo, maiden_name, "
-    #       f"screen_name, "
-    #  f"photo_400_orig, v: {self.version_api}")
+
     url = self.protocol + self.domen + self.path_ + self.title_method
     print( ' url', url)
     r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
@@ -84,7 +81,7 @@ class Get_list_foto_album(Get_autorization_user):
     super().__init__(user_id)
     Basis.__init__(self)
     self.user_id = user_id
-    # self.title_method = 'account.getInfo'
+
     self.title_method = 'photos.getAlbums'
     self.album_ids  = None
     self.version_api  = None
@@ -95,15 +92,13 @@ class Get_list_foto_album(Get_autorization_user):
 
 
   def _get_list_album(self):
-    # Basis.__init__(self)
+
     lsit_id_albums = []
 
 
 
     url = self.protocol + self.domen + self.path_ + self.title_method
 
-    # self.params = {'user_ids': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
-    #                'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
     self.params = {'owner_id': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
                    'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
     r_ = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
@@ -117,19 +112,19 @@ class Get_list_foto_album(Get_autorization_user):
 
       elif informasion.status_code < 300:
         edict_informasion = informasion.json()
-        print(F"edict_informasion: {edict_informasion}")
+
         print(f"Колличество найденных альбомов:{edict_informasion['response']['count']}")
         for i in range(len(edict_informasion['response']['items'])):
 
 
           print(f"ID-альбома:{edict_informasion['response']['items'][i]['id']}")
           print(f"Заголовок альбома:{edict_informasion['response']['items'][i]['title']}")
-          # print(f"Id-обложки (фото превью):{edict_informasion['response']['items'][i]['thumb_id']}")
+
           print(f"Количество фотографий в альбоме:{edict_informasion['response']['items'][i]['size']}")
           print(" ")
           lsit_id_albums.append(str(edict_informasion['response']['items'][i]['id']))
 
-        print('22', lsit_id_albums)
+
         return lsit_id_albums
 
   def _images_of_alboum(self, selected_album):
@@ -138,32 +133,32 @@ class Get_list_foto_album(Get_autorization_user):
     photo_ = {}
     for id_albums in selected_album:
       id_albums = id_albums.strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')
-      # print('11', id_albums)
+
       params = {'access_token': self.access_token,  'owner_id' : self.user_id, 'album_id' : 'saved', 'rev' : 0,\
                 'album_id' : str(id_albums), 'extended' : 0, 'photo_sizes'  : 0, 'v' : self.version_api }
-      # print(params)
+
       url = self.protocol + self.domen + self.path_ + self.title_method
 
       if photo_ == {}:
         response = requests.get(url, params = params)
-        # print(f"response: {response.json()}")
+
         photo_['photo_'] = [response.json()]
       else:
         response = requests.get(url, params = params)
-        # print(f"response: {response.json()}")
+
         photo_['photo_'].append(response.json())
 
 
 
-    # print(f"photo_: {photo_}")
+
     return photo_
 
   def _index_album_selected(self):
 
     lsit_id_albums = Get_list_foto_album._get_list_album(self)
     print('Перечислите "ID-альбомов" которые желаете посмотреть для созранения фотографий ')
-    selected_album = ['240968642'] #(input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
-      #.split(', ')
+    selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
+      .split(', ')
 
     index_i = []
     list_photo_dict = {}
@@ -201,17 +196,8 @@ class Get_list_foto_album(Get_autorization_user):
 
   def _Ya_disk_upload(self, href, file):
 
-    params = {'disable_redirects': 'true'}
-
-    print(f"file: {file}")
-
-    print(f"href : {href }")
-
     t = requests.put(href, data=open('files/' + file, 'rb'))
 
-    print(f"t__: {t}")
-    print(f"t.status_code: {t.status_code}")
-    print(f"t.json(): {t}")
 
   def _Ya_disk_get_link(self):
     files = os.listdir('files/')
@@ -234,10 +220,8 @@ class Get_list_foto_album(Get_autorization_user):
         respons = requests.get(request_, headers=header, params = params)
 
         res = respons.json()
-        print(f"res__: {res}")
-        print(f"res['href']: {res['href']}")
         href = res['href']
-        print(f"href__: {href}")
+
 
         Get_list_foto_album._Ya_disk_upload(self, href, f)
 
@@ -249,6 +233,8 @@ class Get_list_foto_album(Get_autorization_user):
     url = self.protocol + self.domen + self.path_ + self.title_method
 
     print("Сохраняем фотографии")
+    print('''Вначале сохраним в "...\coursework-vk\files"''')
+    print('После закачиваем на Яндекс Диск')
     id_before = 0
 
     for list_photo in get_photo_list['max_photo_size']:
@@ -256,7 +242,7 @@ class Get_list_foto_album(Get_autorization_user):
 
       # Download a photo from the web
       link_ = "files/" + picturies
-      print(f"max_photo_size[1]: {list_photo['url']}")
+
       p = requests.get(list_photo['url'])
 
       out = open(link_, "wb")
