@@ -94,16 +94,17 @@ class Get_list_foto_album(Get_autorization_user):
   def _get_list_album(self):
 
     lsit_id_albums = []
-
+    print('333-0')
 
 
     url = self.protocol + self.domen + self.path_ + self.title_method
-
-    self.params = {'owner_id': self.user_id, 'access_token': self.access_token, 'fields': 'bdate', \
+    # 'fields': 'bdate'
+    self.params = {'owner_id': self.user_id, 'access_token': self.access_token, \
                    'v': self.version_api, 'album_ids': self.album_ids, 'offset': 0}
+    print(self.params)
     r_ = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
     informasion = requests.get(url, params = self.params)
-
+    print(informasion.json())
 
     if r_.search(str(self.user_id)):
       if informasion.status_code >= 300:
@@ -112,6 +113,8 @@ class Get_list_foto_album(Get_autorization_user):
 
       elif informasion.status_code < 300:
         edict_informasion = informasion.json()
+
+        print(edict_informasion)
 
         print(f"Колличество найденных альбомов:{edict_informasion['response']['count']}")
         for i in range(len(edict_informasion['response']['items'])):
@@ -122,6 +125,7 @@ class Get_list_foto_album(Get_autorization_user):
 
           print(f"Количество фотографий в альбоме:{edict_informasion['response']['items'][i]['size']}")
           print(" ")
+
           lsit_id_albums.append(str(edict_informasion['response']['items'][i]['id']))
 
 
@@ -227,6 +231,7 @@ class Get_list_foto_album(Get_autorization_user):
 
 
   def get_photo_selected(self):
+
     get_photo_list = Get_list_foto_album._index_album_selected(self)
 
     self.title_method = 'photos.getUploadServer'
