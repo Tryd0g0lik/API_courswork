@@ -214,6 +214,9 @@ class Get_list_foto_album(Get_autorization_user):
     files = os.listdir('files/')
     request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
 
+    # data_info = Ya._YaFilesSaveInfo(self, size_defoult['album_id'], size_defoult['id'])
+
+
     Authorization = "OAuth {}".format('AQAAAAAEHsPoAADLW4SZ-XnrG0fgq7H0CmynvHw')
     header = {'Content-Type': 'application/json', 'Authorization': Authorization}
 
