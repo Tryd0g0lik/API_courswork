@@ -1,0 +1,7 @@
+<<<<<<< HEAD
+vk1.a.xfkvvkmKi-p3KiYl0IZCwSyW9-Oo6AsV86FsCmtjYdFxEIcvZuPKMHFcHKqxfGjIFsX3lnR3-oEvkR_KkiAMtnJXG6YRgZ3jYcOy4UcBc0ZvxjBrb9zKVk3QrhmkRF43Z6I1dSezJzI9NAo0fmDdiPV9ZzGZfTLAVyyvk9NREFAvOVOsdUwpWVBxrm8_h_Bh
+=======
+https://oauth.vk.com/authorize/
+
+{client_id : 8183873, display : page,redirect_uri : http://example.com/callback, scope : photos, v : 5.131}
+>>>>>>> parent of 02387cf (20220620)

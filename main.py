@@ -39,17 +39,15 @@ if __name__ == '__main__':
   from get import Get_Token, Get_autorization_user, Get_list_foto_album
   import re
 
-  # print('Строка для авторизации приложения - получить токен')
+  print('Строка для авторизации приложения - получить токен')
   # https://oauth.vk.com/authorize?client_id=8183873&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=photos&response_type=token&v=5.131
 
   import requests
 
 
-  # print('''Разместите токен в "tokens_".''')
-  tokens = Get_Token()
-  tokens_ = tokens.get_user_token()
-  # tokens_ = 'vk1.a. ТОКЕН tB0U4IiL1LHLkkGkih7Ku8i3L ТОКЕН dw15H ТОКЕН NpQL1tE-LFI7kOz_ ТОКЕН qGJqPOG7uW7Yczhj' \
-  #           '-wc8MxZlgXpFLucoe ТОКЕН wE6O69CV_c4Lp18jHI ТОКЕН RGvOWh8Asd1oGNG-lG9_'
+  print('''Разместите токен в "tokens_".''')
+  tokens_ = 'vk1.a. ТОКЕН tB0U4IiL1LHLkkGkih7Ku8i3L ТОКЕН dw15H ТОКЕН NpQL1tE-LFI7kOz_ ТОКЕН qGJqPOG7uW7Yczhj' \
+            '-wc8MxZlgXpFLucoe ТОКЕН wE6O69CV_c4Lp18jHI ТОКЕН RGvOWh8Asd1oGNG-lG9_'
 
   api_ = str(5.131)
   r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)

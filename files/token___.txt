@@ -1,3 +1,0 @@
-https://oauth.vk.com/authorize/
-
-{client_id : 8183873, display : page,redirect_uri : http://example.com/callback, scope : photos, v : 5.131}
