@@ -89,8 +89,6 @@ class Get_list_foto_album(Get_autorization_user):
 
 
 
-
-
   def _get_list_album(self):
 
     lsit_id_albums = []
@@ -157,10 +155,34 @@ class Get_list_foto_album(Get_autorization_user):
 
     return photo_
 
-  def _index_album_selected(self):
+  def _YaFilesSaveInfo(self, album_id):
 
-    lsit_id_albums = Get_list_foto_album._get_list_album(self)
-    print('Перечислите "ID-альбомов" которые желаете посмотреть для созранения фотографий ')
+    # Get_list_foto_album.__init__(self, user_id)
+    photo_ids = None
+    photo_sizes = None
+    url_foto = None
+    dict_foto = None
+
+    owner_id = self.user_id
+    url_album = self.protocol + self.domen + self.path_
+
+    params = {'owner_id' : self.user_id, 'album_id' : album_id, 'photo_ids' : photo_ids, 'rev' : 0,\
+              'photo_sizes' : photo_sizes, 'extended' : 1, 'v' : self.version_api}
+    respons = requests.get(url_album, params=params);
+    data_ = respons.json()
+    pprint(data_)
+    return data_
+
+
+    # if dict_foto == None:
+    #   dict_foto = {album_id : [id_foto,size_foto, url_foto]}
+    #
+    # else:
+    #   dict_foto[album_id] += [id_foto,size_foto, url_foto]
+  def _index_album_selected(self):
+    # Get_list_foto_album.__init__(self, user_id)
+    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
+    print('Перечислите "ID-альбомов" которые желаете посмотреть для сохранения фотографий ')
     selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
       .split(', ')
 
@@ -171,6 +193,7 @@ class Get_list_foto_album(Get_autorization_user):
 
       index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')))
 
+    _YaFilesSaveInfo(self, i)
 
     photo_ = Get_list_foto_album._images_of_alboum(self, selected_album)
 
