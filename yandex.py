@@ -2,6 +2,8 @@ from basis import Basis
 import requests
 import pprint
 from datetime import datetime
+import os
+import csv
 
 class Ya(Basis):
 
@@ -27,11 +29,30 @@ class Ya(Basis):
     data_ = respons.json()
 
     print(f'data_: {data_}')
-    # print(data_)
-    return data_
 
-    # if dict_foto == None:
-    #   dict_foto = {album_id : [id_foto,size_foto, url_foto]}
-    #
-    # else:
-    #   dict_foto[album_id] += [id_foto,size_foto, url_foto]
+
+    id = data_['response']['items'][0]['id']
+    user_likes = data_['response']['items'][0]['likes']['user_likes']
+    print(f'user_likes : {user_likes }')
+
+    name = str(user_likes) + '_' + str(datetime.today())
+    # print(f"data_['response']['items'][0]['size']: {data_['response']['items'][0]['sizes']}")
+    url = data_['response']['items'][0]['sizes'][-1]['url']
+    size = str(data_['response']['items'][0]['sizes'][-1]['height']) + ' ' + 'x' + ' ' +\
+           str(data_['response']['items'][0]['sizes'][-1]['width'])
+
+    data_info = {id : {'name' : name, 'size' : size, 'url' : url} }
+    print(f'data_info: {data_info}')
+
+    check_file = os.path.isfile('files/set_info.txt')
+    if check_file == False:
+      open('files/set_info.txt', 'x').close()
+      txtfile = open('files/set_info.txt', 'a')
+
+    else:
+      txtfile = open('files/set_info.txt', 'a')
+
+    txtfile.write(str(data_info))
+    txtfile.close()
+
+    return data_
