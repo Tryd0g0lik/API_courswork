@@ -23,7 +23,7 @@ class Get_Token(Basis):
         if token_text != None:
           open_file.write(token_text)
           open_file.close()
-
+          return token_text
     else:
       file_size = os.path.getsize('files/token.txt')
       print('Вес файла: ', file_size)
