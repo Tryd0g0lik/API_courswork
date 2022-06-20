@@ -1,8 +1,10 @@
 from basis import Basis
+from yandex import Ya
 import os
 import re
 from pprint import pprint
 import requests
+from datetime import datetime
 
 
 
@@ -155,33 +157,10 @@ class Get_list_foto_album(Get_autorization_user):
 
     return photo_
 
-  def _YaFilesSaveInfo(self, album_id):
 
-    # Get_list_foto_album.__init__(self, user_id)
-    photo_ids = None
-    photo_sizes = None
-    url_foto = None
-    dict_foto = None
-
-    owner_id = self.user_id
-    url_album = self.protocol + self.domen + self.path_
-
-    params = {'owner_id' : self.user_id, 'album_id' : album_id, 'photo_ids' : photo_ids, 'rev' : 0,\
-              'photo_sizes' : photo_sizes, 'extended' : 1, 'v' : self.version_api}
-    respons = requests.get(url_album, params=params);
-    data_ = respons.json()
-    pprint(data_)
-    return data_
-
-
-    # if dict_foto == None:
-    #   dict_foto = {album_id : [id_foto,size_foto, url_foto]}
-    #
-    # else:
-    #   dict_foto[album_id] += [id_foto,size_foto, url_foto]
   def _index_album_selected(self):
     # Get_list_foto_album.__init__(self, user_id)
-    # lsit_id_albums = Get_list_foto_album._get_list_album(self)
+    lsit_id_albums = Get_list_foto_album._get_list_album(self)
     print('Перечислите "ID-альбомов" которые желаете посмотреть для сохранения фотографий ')
     selected_album = (input("Вставьте через запятую с пробелом ', ': ")).strip(' ') \
       .split(', ')
@@ -190,10 +169,13 @@ class Get_list_foto_album(Get_autorization_user):
     list_photo_dict = {}
 
     for i in selected_album:
+      print(f'i: {i}')
 
-      index_i.append(lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(',')))
+      i_ = lsit_id_albums.index(str(i).strip(',').strip("][").strip('"').strip("'").strip('"').strip(" ").strip(','))
+      print(f'i_: {i_}')
+      index_i.append(i_)
 
-    _YaFilesSaveInfo(self, i)
+
 
     photo_ = Get_list_foto_album._images_of_alboum(self, selected_album)
 
@@ -210,6 +192,8 @@ class Get_list_foto_album(Get_autorization_user):
               f" {size_defoult['sizes'][ size_id]['width']}")
         print(f"Фотография URL: {size_defoult['sizes'][ size_id]['url']}")
         print(' ')
+
+        Ya._YaFilesSaveInfo(self, size_defoult['album_id'], size_defoult['id'])
 
         if list_photo_dict == {}:
           list_photo_dict['max_photo_size'] = [{'id_allboum' : size_defoult['album_id'], 'url' :\

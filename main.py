@@ -44,10 +44,10 @@ if __name__ == '__main__':
 
   import requests
 
+  tokens = Get_Token()
+  tokens_ = tokens.get_user_token()
 
   print('''Разместите токен в "tokens_".''')
-  tokens_ = 'vk1.a. ТОКЕН tB0U4IiL1LHLkkGkih7Ku8i3L ТОКЕН dw15H ТОКЕН NpQL1tE-LFI7kOz_ ТОКЕН qGJqPOG7uW7Yczhj' \
-            '-wc8MxZlgXpFLucoe ТОКЕН wE6O69CV_c4Lp18jHI ТОКЕН RGvOWh8Asd1oGNG-lG9_'
 
   api_ = str(5.131)
   r = re.compile(r"^[a-zA-Z0-9]+$", re.S | re.I | re.U)
