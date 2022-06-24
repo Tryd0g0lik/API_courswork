@@ -5,6 +5,7 @@ import re
 from pprint import pprint
 import requests
 from datetime import datetime
+import time
 
 
 
@@ -210,9 +211,9 @@ class Get_list_foto_album(Get_autorization_user):
     t = requests.put(href, data=open('files/' + file, 'rb'))
 
 
-  def _Ya_disk_get_link(self):
+  def _Ya_disk_get_link(self, folder):
     files = os.listdir('files/')
-    request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+    request_ = 'https://cloud-api.yandex.net/v1/disk/resources/upload' # +'/' + folder
 
     # data_info = Ya._YaFilesSaveInfo(self, size_defoult['album_id'], size_defoult['id'])
 
@@ -234,6 +235,7 @@ class Get_list_foto_album(Get_autorization_user):
         respons = requests.get(request_, headers=header, params = params)
 
         res = respons.json()
+        print(f'res: {res}')
         href = res['href']
 
 
@@ -242,13 +244,14 @@ class Get_list_foto_album(Get_autorization_user):
 
   def get_photo_selected(self):
 
+
     get_photo_list = Get_list_foto_album._index_album_selected(self)
 
     self.title_method = 'photos.getUploadServer'
     url = self.protocol + self.domen + self.path_ + self.title_method
 
     print("Сохраняем фотографии")
-    print('''Вначале сохраним в "...\coursework-vk\files"''')
+    print('''Вначале сохраним в "...\\coursework-vk\\files"''')
     print('После закачиваем на Яндекс Диск')
     id_before = 0
 
@@ -264,10 +267,25 @@ class Get_list_foto_album(Get_autorization_user):
 
       out.write(p.content)
       out.close()
+      time.sleep(2)
 
 
-
-      Get_list_foto_album._Ya_disk_get_link(self)
+      # txtfile = open('files/set_info.txt', 'r', encoding='utf-8')
+      # data_ = txtfile.read()
+      # name = (data_)
+      # txtfile.close()
+      # s = None
+      # for s in name:
+        # if len(s) > 50:
+          # print(f'len: {len(s)}, name: {s}')
+      # name = name.split("}}{")[-1].split(": ")[2].split(", ")[0].strip("'")
+      # print(f'len: {len(name[0])}, name: {name}')
+      #     #
+      #     # name_ = s.split(", ")[0]
+    # Ya._RevriteNameFile(self)
+    folder = Ya._CreatFolder(self)
+    Ya._RevriteName(self)
+    Get_list_foto_album._Ya_disk_get_link(self, folder)
 
 
 
